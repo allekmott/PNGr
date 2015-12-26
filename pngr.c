@@ -8,6 +8,8 @@
 
 #include <string.h>
 
+#include "pngr.h"
+
 #define PNGR_VERSION "0.0.3"
 
 void version() {
@@ -47,7 +49,7 @@ int main(int argc, char *argv[]) {
 	if (png_file == NULL)
 		gtfo("Could not open file for writing.");
 
-	
+
 
 	fclose(png_file);
 	return 0;
