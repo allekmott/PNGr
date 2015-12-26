@@ -18,9 +18,15 @@ enum palette {
 void version();
 
 /* display usage information (user = pl3b) */
-void usage(char *exe);
+void usage(const char *exe);
 
 /* gtfo - display error message and exit */
-void gtfo(char *msg);
+void gtfo(const char *msg);
+
+/* derive palette value from textual input */
+enum palette derive_palette(const char *input);
+
+/* return string value of palette enumeration */
+const char *palette_string(enum palette palette);
 
 #endif
