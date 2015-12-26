@@ -6,7 +6,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define PNGR_VERSION "0.0.2"
+#include <string.h>
+
+#define PNGR_VERSION "0.0.3"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -28,6 +30,7 @@ int main(int argc, char *argv[]) {
 	/* name of prospective PNG */
 	char *filename = "lol.png";
 
+	FILE *png_file;
 	
 	int c;
 	/* the beautiful getopt */
@@ -40,6 +43,12 @@ int main(int argc, char *argv[]) {
 
 	printf("Outputting to: %s\n", filename);
 
+	png_file = fopen(filename, "wb");
+	if (png_file == NULL)
+		gtfo("Could not open file for writing.");
 
+	
+
+	fclose(png_file);
 	return 0;
 }

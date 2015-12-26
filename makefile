@@ -14,4 +14,4 @@ $(EXE): $(OBJ_DEPS)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 clean:
-	rm -f $(EXE) *.o *.wav *~
+	rm -f $(EXE) *.o *.png *~
