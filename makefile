@@ -3,7 +3,7 @@ CFLAGS=
 
 EXE=pngr
 
-DEPS=
+DEPS=pngr.h
 
 OBJ_DEPS=pngr.o
 
