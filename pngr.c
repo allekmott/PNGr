@@ -7,8 +7,10 @@
 #include <unistd.h>
 #include <string.h>
 
+#define PNG_DEBUG 3
 #include <png.h>
 
+#include "imgfapper.h"
 #include "pngr.h"
 
 #define PNGR_VERSION "0.0.4"
@@ -118,7 +120,7 @@ int main(int argc, char *argv[]) {
 		gtfo("Unable to write header");
 
 	png_set_IHDR(png_ptr, info_ptr, image_width, image_height,
-		palette_bitdepth(palette), palette_pngequiv(palette),
+		palette_bitdepth(color_palette), palette_pngequiv(color_palette),
 		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE,
 		PNG_FILTER_TYPE_BASE);
 
@@ -131,7 +133,7 @@ int main(int argc, char *argv[]) {
 
 	png_bytep pixels[image_height];
 
-	fap_png(pixels, png_get_rowbytes(png_ptr, info_ptr), width, height);
+	fap_png(pixels, png_get_rowbytes(png_ptr, info_ptr), image_width, image_height);
 	png_write_image(png_ptr, pixels);
 
 	fclose(png_file);

@@ -5,6 +5,7 @@
 #include <png.h>
 #include <math.h>
 #include <time.h>
+#include <stdlib.h>
 
 #include "imgfapper.h"
 
@@ -14,14 +15,16 @@ void fap_png(png_bytep *pixels, size_t row_size, int width, int height) {
 	 * row_size / width = bitdepth
 	 */
 
-	srand(time(NULL));
+	static int seeded_rand = 0;
+	if (!seeded_rand++)
+		srand(time(NULL));
 
 	int bytes_per_pixel = row_size / width;
 
 	int rown;
 
 	/* for each row */
-	for (rown = 0; row < height; row++) {
+	for (rown = 0; rown < height; rown++) {
 		pixels[rown] = malloc(row_size);
 		png_bytep row = pixels[rown];
 

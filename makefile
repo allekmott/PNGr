@@ -1,11 +1,11 @@
 CC=gcc
-CFLAGS=-lm -lpng
+CFLAGS=-lm -lpng -I/usr/local/include -I/usr/local/lib
 
 EXE=pngr
 
-DEPS=pngr.h
+DEPS=pngr.h imgfapper.h
 
-OBJ_DEPS=pngr.o
+OBJ_DEPS=imgfapper.o pngr.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
