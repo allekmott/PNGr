@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-lm -lpng -I/usr/local/include -I/usr/local/lib
+CFLAGS=-lm -lpng
 
 EXE=pngr
 

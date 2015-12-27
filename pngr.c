@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
 	png_infop info_ptr;
 
 	/* attempt creation of png write struct */
-	if (!(png_ptr = png_create_png_ptr(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL)))
+	if (!(png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL)))
 		gtfo("png_create_png_ptr failed");
 
 	/* attempt creation of png info struct */
