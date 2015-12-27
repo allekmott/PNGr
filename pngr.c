@@ -13,7 +13,7 @@
 #include "imgfapper.h"
 #include "pngr.h"
 
-#define PNGR_VERSION "0.1.0"
+#define PNGR_VERSION "0.1.1"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -68,9 +68,16 @@ int main(int argc, char *argv[]) {
 
 	/* name of prospective PNG */
 	char *filename = "lol.png";
+
+	/* default to 24-bit rgb */
 	enum palette color_palette = RGB_24;
+
+	/* and 500x500 */
 	int image_width = 500,
 		image_height = 500;
+
+	/* image generation algorithm, default to rand */
+	void (*gen_png) (pngbytep *, size_t, int, int) = fap_png_rand;
 
 	FILE *png_file;
 	
@@ -134,7 +141,7 @@ int main(int argc, char *argv[]) {
 	png_bytep *pixels = malloc(sizeof(png_bytep) * image_height);
 
 	printf("Generating image...\n");
-	fap_png(pixels, png_get_rowbytes(png_ptr, info_ptr), image_width, image_height);
+	gen_png(pixels, png_get_rowbytes(png_ptr, info_ptr), image_width, image_height);
 
 	printf("Generation complete, writing...\n");
 	png_write_image(png_ptr, pixels);
