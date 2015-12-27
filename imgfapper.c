@@ -9,15 +9,17 @@
 
 #include "imgfapper.h"
 
-void fap_png(png_bytep *pixels, size_t row_size, int width, int height) {
+void fap_rand() {
+	static int seeded_rand = 0;
+	if (!seeded_rand++)
+		srand(time(NULL));
+}
+
+void fap_png(png_bytep *pixels, size_t row_size, int width, int height, void (*pixel_fapper) (struct pixel *)) {
 	/* to create image of width and height:
 	 * height rows of width pixels
 	 * row_size / width = bitdepth
 	 */
-
-	static int seeded_rand = 0;
-	if (!seeded_rand++)
-		srand(time(NULL));
 
 	int bytes_per_pixel = row_size / width;
 
@@ -32,13 +34,26 @@ void fap_png(png_bytep *pixels, size_t row_size, int width, int height) {
 
 		/* for each pixel in the row */
 		for (pixeln = 0; pixeln < width; pixeln++) {
-			int byten;
+			/* create pixel struct */
+			struct pixel pixel;
+			pixel->x = pixeln;
+			pixel->y = rown;
+			pixel->bytes = bytes_per_pixel;
+			pixel->data = row[pixeln];
 
-			/* fill each data byte with a random byte */
-			for (byten = 0; byten < bytes_per_pixel; byten++) {
-				/* start on left = r -> g -> b -> a (assuming big endian) */
-				row[(pixeln * bytes_per_pixel) + byten] = (png_byte) (rand() % 256);
-			}
+			/* fap dat pixel! */
+			pixel_fapper(&pixel);
 		}
 	}
+}
+
+void pixel_fapper_rand(struct pixel *pixel) {
+	int byten;
+	for (byten = 0; byten < pixel->bytes; byten++)
+		pixel->data[byten] = (png_byte) (rand() % 256);
+}
+
+void fap_png_rand(png_bytep *pixels, size_t row_size, int width, int height) {
+	fap_rand();
+	fap_png(pixels, row_size, width, height, pixel_fapper_rand);
 }
