@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=
+CFLAGS=-lm -lpng
 
 EXE=pngr
 

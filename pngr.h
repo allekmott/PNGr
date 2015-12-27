@@ -2,6 +2,7 @@
  * Created: 26 Dec 2015
  */ 
 
+#include <png.h>
 
 #ifndef PNGR_H
 #define PNGR_H
@@ -28,5 +29,11 @@ enum palette derive_palette(const char *input);
 
 /* return string value of palette enumeration */
 const char *palette_string(enum palette palette);
+
+/* return equivalent png_byte color type of palette */
+png_byte palette_pngequiv(enum palette palette);
+
+/* return corresponding png bit depth of palette */
+png_byte palette_bitdepth(enum palette palette);
 
 #endif

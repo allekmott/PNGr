@@ -5,12 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
 #include <string.h>
+
+#include <png.h>
 
 #include "pngr.h"
 
-#define PNGR_VERSION "0.0.3"
+#define PNGR_VERSION "0.0.4"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -22,8 +23,8 @@ void usage(const char *exe) {
 }
 
 void gtfo(const char *msg) {
-	fprintf(stderr, "%s\n", msg);
-	exit(1);
+	fprintf(stderr, "%s.\n", msg);
+	abort();
 }
 
 enum palette derive_palette(const char *input) {
@@ -44,6 +45,20 @@ const char *palette_string(enum palette palette) {
 		case GRAYSCALE: return "Grayscale (without alpha)";
 		default: return "Unknown palette type";
 	}
+}
+
+png_byte palette_pngequiv(enum palette palette) {
+	switch (palette) {
+		case RGB_24: return PNG_COLOR_TYPE_RGB;
+		case RGBA_32: return PNG_COLOR_TYPE_RGB_ALPHA;
+		case GRAYSCALE_A: return PNG_COLOR_TYPE_GRAY_ALPHA;
+		case GRAYSCALE: return PNG_COLOR_TYPE_GRAY;
+		default: gtfo("wtf m8");
+	}
+}
+
+png_byte palette_bitdepth(enum palette palette) {
+	return (png_byte) 8;
 }
 
 int main(int argc, char *argv[]) {
@@ -78,9 +93,46 @@ int main(int argc, char *argv[]) {
 
 	png_file = fopen(filename, "wb");
 	if (png_file == NULL)
-		gtfo("Could not open file for writing.");
+		gtfo("Could not open file for writing");
+
+	png_structp png_ptr;
+	png_infop info_ptr;
+
+	/* attempt creation of png write struct */
+	if (!(png_ptr = png_create_png_ptr(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL)))
+		gtfo("png_create_png_ptr failed");
+
+	/* attempt creation of png info struct */
+	if (!(info_ptr = png_create_info_struct(png_ptr)))
+		gtfo("png_create_info_struct failed");
+
+	/* attempt to initialize I/O */
+	if (setjmp(png_jmpbuf(png_ptr)))
+		gtfo("Unable to initalize I/O");
+
+	png_init_io(png_ptr, info_ptr);
 
 
+	/* write header */
+	if (setjmp(png_jmpbuf(png_ptr)))
+		gtfo("Unable to write header");
+
+	png_set_IHDR(png_ptr, info_ptr, image_width, image_height,
+		palette_bitdepth(palette), palette_pngequiv(palette),
+		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_BASE,
+		PNG_FILTER_TYPE_BASE);
+
+	png_write_info(png_ptr, info_ptr);
+
+
+	/* write image */
+	if (setjmp(png_jmpbuf(png_ptr)))
+		gtfo("Unable to write image");
+
+	/*png_bytep pixels[image_height];
+
+	fap_png(pixels, width, height);
+	png_write_image(png_ptr, pixels);*/
 
 	fclose(png_file);
 	return 0;
