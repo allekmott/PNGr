@@ -129,10 +129,10 @@ int main(int argc, char *argv[]) {
 	if (setjmp(png_jmpbuf(png_ptr)))
 		gtfo("Unable to write image");
 
-	/*png_bytep pixels[image_height];
+	png_bytep pixels[image_height];
 
-	fap_png(pixels, width, height);
-	png_write_image(png_ptr, pixels);*/
+	fap_png(pixels, png_get_rowbytes(png_ptr, info_ptr), width, height);
+	png_write_image(png_ptr, pixels);
 
 	fclose(png_file);
 	return 0;
