@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
 	if (setjmp(png_jmpbuf(png_ptr)))
 		gtfo("Unable to initalize I/O");
 
-	png_init_io(png_ptr, info_ptr);
+	png_init_io(png_ptr, png_file);
 
 
 	/* write header */
