@@ -22,6 +22,7 @@ void fap_png(png_bytep *pixels, size_t row_size, int width, int height, void (*p
 	 */
 
 	int bytes_per_pixel = row_size / width;
+	printf("Bytes per pixel: (%i / %i) = %i\n", (int) row_size, width, bytes_per_pixel);
 
 	int rown;
 
@@ -39,7 +40,7 @@ void fap_png(png_bytep *pixels, size_t row_size, int width, int height, void (*p
 			pixel.x = pixeln;
 			pixel.y = rown;
 			pixel.bytes = bytes_per_pixel;
-			pixel.data = &(row[pixeln]);
+			pixel.data = &(row[pixeln * bytes_per_pixel]);
 
 			/* fap dat pixel! */
 			pixel_fapper(&pixel);
@@ -49,7 +50,7 @@ void fap_png(png_bytep *pixels, size_t row_size, int width, int height, void (*p
 
 void pixel_fapper_rand(struct pixel *pixel) {
 	int byten;
-	for (byten = 0; byten < pixel->bytes; byten++)
+	for (byten = 0; byten < (pixel->bytes); byten++)
 		pixel->data[byten] = (png_byte) (rand() % 256);
 }
 
