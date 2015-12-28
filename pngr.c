@@ -13,7 +13,7 @@
 #include "imgfapper.h"
 #include "pngr.h"
 
-#define PNGR_VERSION "0.1.4"
+#define PNGR_VERSION "0.1.5"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -72,14 +72,24 @@ int main(int argc, char *argv[]) {
 	int image_width = 500,
 		image_height = 500;
 
-	void (*png_fapper) (png_bytep *, struct image_info *) = fap_png_rand;
+	void (*png_fapper) (png_bytep *, struct image_info *) = fap_png_sin;
 
 	FILE *png_file;
 	
 	int c;
 	/* the beautiful getopt */
-	while ((c = getopt(argc, argv, "o:w:h:p:")) != -1) {
+	while ((c = getopt(argc, argv, "a:o:w:h:p:")) != -1) {
 		switch (c) {
+			case 'a': /* switch alorightms */
+				if (optarg[0] == 'r') {
+					printf("Using random color algorithm\n");
+					png_fapper = fap_png_rand;
+				} else if (optarg[0] == 's') {
+					printf("Using sinusoidal color algorithm\n");
+					png_fapper = fap_png_sin;
+				} else
+					usage(argv[0]);
+				break;
 			case 'o': filename = optarg; break;
 			case 'w': image_width = atoi(optarg); break;
 			case 'h': image_height = atoi(optarg); break;
