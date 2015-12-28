@@ -38,9 +38,9 @@ void pixel_fapper_rand(struct pixel *pixel);
 void fap_png_rand(png_bytep *pixels, struct image_info *info);
 
 /* Generates pixel color values via sinusoidal a function */
-/*void pixel_fapper_sin(struct pixel *pixel);*/
+void pixel_fapper_sin(struct pixel *pixel);
 
 /* Generates a PNG image w/ sinusoidally-calculated pixels */
-/*void fap_png_sin(png_bytep *pixels, size_t row_size, int width, int height);*/
+void fap_png_sin(png_bytep *pixels, struct image_info *info);
 
 #endif

@@ -13,7 +13,7 @@
 #include "imgfapper.h"
 #include "pngr.h"
 
-#define PNGR_VERSION "0.1.3"
+#define PNGR_VERSION "0.1.4"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);

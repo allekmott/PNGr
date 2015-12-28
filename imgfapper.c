@@ -55,11 +55,41 @@ void fap_png_rand(png_bytep *pixels, struct image_info *info) {
 	fap_rand();
 	fap_png(pixels, info, pixel_fapper_rand);
 }
-/*
-void pixel_fapper_sin(struct pixel *pixel) {
 
+void pixel_fapper_sin(struct pixel *pixel) {
+	/* normalize to fit exactly one cycle into image */
+
+	/* t is horizontal parameterization */
+	int min_t_raw = 0;
+	int max_t_raw = pixel->info->width;
+
+	/* s is vertical parameterization */
+	int min_s_raw = 0;
+	int max_s_raw = pixel->info->height;
+
+	/* Desired range of inputs:
+	 * t: 0 -> pi
+	 * s: 0 -> pi
+	 * Adjustment:
+	 * max_norm_t = 1 -> max_t_raw / max_t_raw
+	 * t(x) = pi * (x / max_t_raw)
+	 * 
+	 * max_norm_s = 1 -> max_s_raw / max_s_raw
+	 * s(y) = pi * (y / max_s_raw)
+	 */
+
+	/* pixel's norm'd values */
+	float t = M_PI * ((float) (pixel->x) / (float) max_t_raw);
+	float s = M_PI * ((float) (pixel->y) / (float) max_s_raw);
+
+	/* TODO define f(t, s) */
+	int colorVal = (int) 256 * sin(t) - (int) 256 * sin(s);
+
+	int byten;
+	for (byten = 0; byten < (pixel->info->bpp); byten++)
+		pixel->data[byten] = colorVal;
 }
 
-void fap_png_sin(png_bytep *pixels, size_t row_size, int width, int height) {
-	fap_png(pixels, row_size, width, height, pixel_fapper_sin);
-}*/
+void fap_png_sin(png_bytep *pixels, struct image_info *info) {
+	fap_png(pixels, info, pixel_fapper_sin);
+}
