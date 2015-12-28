@@ -13,7 +13,7 @@
 #include "imgfapper.h"
 #include "pngr.h"
 
-#define PNGR_VERSION "0.1.1"
+#define PNGR_VERSION "0.1.2"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
 	png_bytep *pixels = malloc(sizeof(png_bytep) * image_height);
 
 	printf("Generating image...\n");
-	fap_png(pixels, png_get_rowbytes(png_ptr, info_ptr), image_width, image_height);
+	fap_png_rand(pixels, png_get_rowbytes(png_ptr, info_ptr), image_width, image_height);
 
 	printf("Generation complete, writing...\n");
 	png_write_image(png_ptr, pixels);

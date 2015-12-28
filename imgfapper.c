@@ -39,7 +39,7 @@ void fap_png(png_bytep *pixels, size_t row_size, int width, int height, void (*p
 			pixel.x = pixeln;
 			pixel.y = rown;
 			pixel.bytes = bytes_per_pixel;
-			pixel.data = row[pixeln];
+			pixel.data = &(row[pixeln]);
 
 			/* fap dat pixel! */
 			pixel_fapper(&pixel);
