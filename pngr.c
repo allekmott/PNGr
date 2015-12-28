@@ -13,7 +13,7 @@
 #include "imgfapper.h"
 #include "pngr.h"
 
-#define PNGR_VERSION "0.1.2"
+#define PNGR_VERSION "0.1.3"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -71,6 +71,8 @@ int main(int argc, char *argv[]) {
 	enum palette color_palette = RGB_24;
 	int image_width = 500,
 		image_height = 500;
+
+	void (*png_fapper) (png_bytep *, struct image_info *) = fap_png_rand;
 
 	FILE *png_file;
 	
@@ -133,8 +135,14 @@ int main(int argc, char *argv[]) {
 
 	png_bytep *pixels = malloc(sizeof(png_bytep) * image_height);
 
+	struct image_info info;
+	info.width = image_width;
+	info.height = image_height;
+	info.row_size = png_get_rowbytes(png_ptr, info_ptr);
+	info.bpp = info.row_size / info.width;
+
 	printf("Generating image...\n");
-	fap_png_rand(pixels, png_get_rowbytes(png_ptr, info_ptr), image_width, image_height);
+	png_fapper(pixels, &info);
 
 	printf("Generation complete, writing...\n");
 	png_write_image(png_ptr, pixels);
