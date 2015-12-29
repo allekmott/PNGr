@@ -1,6 +1,6 @@
-/* imgfapper.h
+/* pngen.h
  * Created: 26 Dec 2014
- * Faps images
+ * Generates images
  */
 
 #include <png.h>

@@ -1,4 +1,4 @@
-/* imgfapper.c
+/* pngen.c
  * Created: 26 Dec 2014
  */
 
