@@ -123,11 +123,11 @@ void pixel_fapper_sin(struct pixel *pixel) {
 		 */
 		redValue = (png_byte) (127.0f * sin(t) + 128.0f);
 		greenValue = (png_byte) (127.0f * sin(s) + 128.0f);
-		blueValue = (png_byte) (127.0f * cos(t + s) + 128.0f);
+		blueValue = (png_byte) (127.0f * sin((t + s) / 2.0) + 128.0f);
 
 		colorVals[0] = redValue;
-		colorVals[1] = blueValue;
-		colorVals[2] = greenValue;
+		colorVals[1] = greenValue;
+		colorVals[2] = blueValue;
 
 		/* if alpha, throw in a nifty constant */
 		if (pixel->info->bpp > 3)
