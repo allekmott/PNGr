@@ -14,6 +14,7 @@ struct image_info {
 	int height;
 	size_t row_size; /*size of row array in bytes */
 	int bpp; /* bytes per pixel */
+	int color; /* bool to denote color vs grayscale */
 };
 
 /* data structure to represent pixel */

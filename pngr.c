@@ -13,7 +13,7 @@
 #include "imgfapper.h"
 #include "pngr.h"
 
-#define PNGR_VERSION "0.1.5"
+#define PNGR_VERSION "0.1.6"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -45,7 +45,7 @@ const char *palette_string(enum palette palette) {
 		case RGBA_32: return "32-bit RGBa";
 		case GRAYSCALE_A: return "Grayscale (with alpha)";
 		case GRAYSCALE: return "Grayscale (without alpha)";
-		default: return "Unknown palette type";
+		default: gtfo("Invalid palette");
 	}
 }
 
@@ -55,12 +55,22 @@ png_byte palette_pngequiv(enum palette palette) {
 		case RGBA_32: return PNG_COLOR_TYPE_RGB_ALPHA;
 		case GRAYSCALE_A: return PNG_COLOR_TYPE_GRAY_ALPHA;
 		case GRAYSCALE: return PNG_COLOR_TYPE_GRAY;
-		default: gtfo("wtf m8");
+		default: gtfo("Invalid palette");
 	}
 }
 
 png_byte palette_bitdepth(enum palette palette) {
 	return (png_byte) 8;
+}
+
+int palette_color(enum palette palette) {
+	switch (palette) {
+		case RGB_24:
+		case RGBA_32: return 1;
+		case GRAYSCALE_A:
+		case GRAYSCALE: return 0;
+		default: gtfo("Invalid palette");
+	}
 }
 
 int main(int argc, char *argv[]) {
@@ -150,6 +160,7 @@ int main(int argc, char *argv[]) {
 	info.height = image_height;
 	info.row_size = png_get_rowbytes(png_ptr, info_ptr);
 	info.bpp = info.row_size / info.width;
+	info.color = palette_color(color_palette);
 
 	printf("Generating image...\n");
 	png_fapper(pixels, &info);

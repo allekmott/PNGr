@@ -36,4 +36,7 @@ png_byte palette_pngequiv(enum palette palette);
 /* return corresponding png bit depth of palette */
 png_byte palette_bitdepth(enum palette palette);
 
+/* return whether palette denotes color image */
+int palette_color(enum palette palette);
+
 #endif
