@@ -7,15 +7,15 @@
 #include <time.h>
 #include <stdlib.h>
 
-#include "imgfapper.h"
+#include "pngen.h"
 
-void fap_rand() {
+void seed_rand() {
 	static int seeded_rand = 0;
 	if (!seeded_rand++)
 		srand(time(NULL));
 }
 
-void fap_png(png_bytep *pixels, struct image_info *info, void (*pixel_fapper) (struct pixel *)) {
+void gen_png(png_bytep *pixels, struct image_info *info, void (*pixgen) (struct pixel *)) {
 	/* to create image of width and height:
 	 * height rows of width pixels
 	 * row_size / width = bitdepth
@@ -39,24 +39,24 @@ void fap_png(png_bytep *pixels, struct image_info *info, void (*pixel_fapper) (s
 			pixel.info = info;
 			pixel.data = &(row[pixeln * info->bpp]);
 
-			/* fap dat pixel! */
-			pixel_fapper(&pixel);
+			/* generate pixel */
+			pixgen(&pixel);
 		}
 	}
 }
 
-void pixel_fapper_rand(struct pixel *pixel) {
+void pixgen_rand(struct pixel *pixel) {
 	int byten;
 	for (byten = 0; byten < (pixel->info->bpp); byten++)
 		pixel->data[byten] = (png_byte) (rand() % 256);
 }
 
-void fap_png_rand(png_bytep *pixels, struct image_info *info) {
-	fap_rand();
-	fap_png(pixels, info, pixel_fapper_rand);
+void gen_png_rand(png_bytep *pixels, struct image_info *info) {
+	seed_rand();
+	gen_png(pixels, info, pixgen_rand);
 }
 
-void pixel_fapper_sin(struct pixel *pixel) {
+void pixgen_sin(struct pixel *pixel) {
 	/* inputs to vector function function */
 	float t, s;
 
@@ -147,6 +147,6 @@ void pixel_fapper_sin(struct pixel *pixel) {
 	
 }
 
-void fap_png_sin(png_bytep *pixels, struct image_info *info) {
-	fap_png(pixels, info, pixel_fapper_sin);
+void gen_png_sin(png_bytep *pixels, struct image_info *info) {
+	gen_png(pixels, info, pixgen_sin);
 }

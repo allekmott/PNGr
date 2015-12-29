@@ -3,9 +3,9 @@ CFLAGS=-lm -lpng
 
 EXE=pngr
 
-DEPS=pngr.h imgfapper.h
+DEPS=pngr.h pngen.h
 
-OBJ_DEPS=imgfapper.o pngr.o
+OBJ_DEPS=pngen.o pngr.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)

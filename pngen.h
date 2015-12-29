@@ -5,8 +5,8 @@
 
 #include <png.h>
 
-#ifndef IMGFAPPER_H
-#define IMGFAPPER_H
+#ifndef PNGEN_H
+#define PNGEN_H
 
 /* data structure to represent image properties */
 struct image_info {
@@ -27,21 +27,21 @@ struct pixel {
 
 
 /* seed random number generator (if it hasn't already been) */
-void fap_rand();
+void seed_rand();
 
-/* Generate a PNG image using provided pixel generation algorithm (pixel_fapper) */
-void fap_png(png_bytep *pixels, struct image_info *info, void (*pixel_fapper) (struct pixel *));
+/* Generate a PNG image using provided pixel generation algorithm (pixgen) */
+void gen_png(png_bytep *pixels, struct image_info *info, void (*pixgen) (struct pixel *));
 
 /* Generates random pixel color values */
-void pixel_fapper_rand(struct pixel *pixel);
+void pixgen_rand(struct pixel *pixel);
 
 /* Generates a random PNG image */
-void fap_png_rand(png_bytep *pixels, struct image_info *info);
+void gen_png_rand(png_bytep *pixels, struct image_info *info);
 
 /* Generates pixel color values via sinusoidal a function */
-void pixel_fapper_sin(struct pixel *pixel);
+void pixgen_sin(struct pixel *pixel);
 
 /* Generates a PNG image w/ sinusoidally-calculated pixels */
-void fap_png_sin(png_bytep *pixels, struct image_info *info);
+void gen_png_sin(png_bytep *pixels, struct image_info *info);
 
 #endif
