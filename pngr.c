@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 #define PNG_DEBUG 3
 #include <png.h>
@@ -13,7 +14,7 @@
 #include "pngen.h"
 #include "pngr.h"
 
-#define PNGR_VERSION "0.2.0"
+#define PNGR_VERSION "0.2.1"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -162,12 +163,29 @@ int main(int argc, char *argv[]) {
 	info.bpp = info.row_size / info.width;
 	info.color = palette_color(color_palette);
 
+	/* Timing for generation */
+	clock_t start, diff;
+
 	printf("Generating image...\n");
+	
+	/* start clock & run gen function */
+	start = clock();
 	png_gen(pixels, &info);
 
-	printf("Generation complete, writing...\n");
+	/* log end time, take difference */
+	diff = clock() - start;
+	float elapsed = (float) diff / (float) CLOCKS_PER_SEC;
+
+	printf("Generation complete (%1.3f s), writing...\n", elapsed);
+
+	/* and time the write... */
+	start = clock();
 	png_write_image(png_ptr, pixels);
-	printf("Write complete. Exiting\n");
+
+	diff = clock() - start;
+	elapsed = (float) diff / (float) CLOCKS_PER_SEC;
+
+	printf("Write complete (%1.3f s). Exiting\n", elapsed);
 
 	fclose(png_file);
 	free(pixels);

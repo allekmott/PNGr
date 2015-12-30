@@ -57,24 +57,24 @@ void gen_png_rand(png_bytep *pixels, struct image_info *info) {
 }
 
 void pixgen_sin(struct pixel *pixel) {
-	/* inputs to vector function function */
+	/* inputs to vector function */
 	float t, s;
 
 	/* normalize or not? */
-	int normalize = 1;
+	static int normalize = 1;
 
 	/* magnitude of zoom (in z times normal) */
-	float zoom = 1.0f;
+	static float zoom = 1.0f;
 
 	if (normalize) {
 		/* normalize to fit exactly one cycle into image */
 
 		/* t is horizontal parameterization */
-		int min_t_raw = 0;
+		static int min_t_raw = 0;
 		int max_t_raw = pixel->info->width;
 
 		/* s is vertical parameterization */
-		int min_s_raw = 0;
+		static int min_s_raw = 0;
 		int max_s_raw = pixel->info->height;
 
 		/* Desired range of inputs:
@@ -121,9 +121,13 @@ void pixgen_sin(struct pixel *pixel) {
 		 * (eventually may encapsulate this into generic function
 		 * pointer)
 		 */
-		redValue = (png_byte) (127.0f * sin(t) + 128.0f);
+		redValue = (png_byte) (127.0f * sin(t)  + 128.0f);
 		greenValue = (png_byte) (127.0f * sin(s) + 128.0f);
-		blueValue = (png_byte) (127.0f * sin((t + s) / 2.0) + 128.0f);
+		blueValue = (png_byte) (127.0f * sin(t/s) + 128.0f);
+
+			//redValue *= sin(greenValue);
+			//greenValue *= sin(blueValue);
+			//blueValue *= sin(redValue);
 
 		colorVals[0] = redValue;
 		colorVals[1] = greenValue;
