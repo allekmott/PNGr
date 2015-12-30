@@ -191,7 +191,11 @@ int main(int argc, char *argv[]) {
 	diff = clock() - start;
 	elapsed = (float) diff / (float) CLOCKS_PER_SEC;
 
-	png_jmpbuf()
+	/* end write */
+	if (setjmp(png_jmpbuf(png_ptr)))
+		gtfo("Error completing write");
+
+	png_write_end(png_ptr, NULL);
 
 	printf("Write complete (%1.3f s). Exiting\n", elapsed);
 
