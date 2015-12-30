@@ -14,7 +14,9 @@
 #include "pngen.h"
 #include "pngr.h"
 
-#define PNGR_VERSION "0.2.1"
+#include "pngen_cuda.h"
+
+#define PNGR_VERSION "0.2.1c"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -37,7 +39,7 @@ enum palette derive_palette(const char *input) {
 		exit(0);
 	}
 
-	return numerical;
+	return (enum palette) numerical;
 }
 
 const char *palette_string(enum palette palette) {
@@ -46,7 +48,7 @@ const char *palette_string(enum palette palette) {
 		case RGBA_32: return "32-bit RGBa";
 		case GRAYSCALE_A: return "Grayscale (with alpha)";
 		case GRAYSCALE: return "Grayscale (without alpha)";
-		default: gtfo("Invalid palette");
+		default: gtfo("Invalid palette"); return "Invalid palette";
 	}
 }
 
@@ -56,7 +58,7 @@ png_byte palette_pngequiv(enum palette palette) {
 		case RGBA_32: return PNG_COLOR_TYPE_RGB_ALPHA;
 		case GRAYSCALE_A: return PNG_COLOR_TYPE_GRAY_ALPHA;
 		case GRAYSCALE: return PNG_COLOR_TYPE_GRAY;
-		default: gtfo("Invalid palette");
+		default: gtfo("Invalid palette"); return -1;
 	}
 }
 
@@ -70,7 +72,7 @@ int palette_color(enum palette palette) {
 		case RGBA_32: return 1;
 		case GRAYSCALE_A:
 		case GRAYSCALE: return 0;
-		default: gtfo("Invalid palette");
+		default: gtfo("Invalid palette"); return -1;
 	}
 }
 
@@ -98,8 +100,12 @@ int main(int argc, char *argv[]) {
 				} else if (optarg[0] == 's') {
 					printf("Using sinusoidal color algorithm\n");
 					png_gen = gen_png_sin;
-				} else
+				} else if (optarg[0] == 'c') {
+					printf("Using sinusoidal color algorithm (CUDA)\n");
+					png_gen = cudagen_png_sin;
+				} else {
 					usage(argv[0]);
+				}
 				break;
 			case 'o': filename = optarg; break;
 			case 'w': image_width = atoi(optarg); break;
@@ -154,7 +160,7 @@ int main(int argc, char *argv[]) {
 	if (setjmp(png_jmpbuf(png_ptr)))
 		gtfo("Unable to write image");
 
-	png_bytep *pixels = malloc(sizeof(png_bytep) * image_height);
+	png_bytep *pixels = (png_bytep *) malloc(sizeof(png_bytep) * image_height);
 
 	struct image_info info;
 	info.width = image_width;
@@ -184,6 +190,8 @@ int main(int argc, char *argv[]) {
 
 	diff = clock() - start;
 	elapsed = (float) diff / (float) CLOCKS_PER_SEC;
+
+	png_jmpbuf()
 
 	printf("Write complete (%1.3f s). Exiting\n", elapsed);
 

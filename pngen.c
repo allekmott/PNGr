@@ -25,7 +25,7 @@ void gen_png(png_bytep *pixels, struct image_info *info, void (*pixgen) (struct 
 
 	/* for each row */
 	for (rown = 0; rown < info->height; rown++) {
-		pixels[rown] = malloc(info->row_size);
+		pixels[rown] = (png_bytep) malloc(info->row_size);
 		png_bytep row = pixels[rown];
 
 		int pixeln;
@@ -70,11 +70,11 @@ void pixgen_sin(struct pixel *pixel) {
 		/* normalize to fit exactly one cycle into image */
 
 		/* t is horizontal parameterization */
-		static int min_t_raw = 0;
+		//static int min_t_raw = 0;
 		int max_t_raw = pixel->info->width;
 
 		/* s is vertical parameterization */
-		static int min_s_raw = 0;
+		//static int min_s_raw = 0;
 		int max_s_raw = pixel->info->height;
 
 		/* Desired range of inputs:
@@ -121,8 +121,8 @@ void pixgen_sin(struct pixel *pixel) {
 		 * (eventually may encapsulate this into generic function
 		 * pointer)
 		 */
-		redValue = (png_byte) (127.0f * sin(t)  + 128.0f);
-		greenValue = (png_byte) (127.0f * sin(s) + 128.0f);
+		redValue = (png_byte) (127.0f * sin(t + pow(s, t))  + 128.0f);
+		greenValue = (png_byte) (127.0f * sin(s + pow(t, s)) + 128.0f);
 		blueValue = (png_byte) (127.0f * sin(t/s) + 128.0f);
 
 			//redValue *= sin(greenValue);
