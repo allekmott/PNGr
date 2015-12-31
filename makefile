@@ -4,6 +4,8 @@ LIB_FLAGS=-lm -lpng
 
 NVCC=nvcc
 NVCC_FLAGS=$(LIB_FLAGS)
+
+# this guy will vary from system to system
 CUDA_INCLUDEPATH=/opt/cuda/include
 
 CFLAGS=$(LIB_FLATS) -Wall -I $(CUDA_INCLUDEPATH)
