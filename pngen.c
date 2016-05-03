@@ -121,9 +121,9 @@ void pixgen_sin(struct pixel *pixel) {
 		 * (eventually may encapsulate this into generic function
 		 * pointer)
 		 */
-		redValue = (png_byte) (127.0f * comp_sine_phase(t, s, 2) + 128.0f);
-		greenValue = (png_byte) (127.0f * comp_sine_freq(t, s, 2) + 128.0f);
-		blueValue = (png_byte) (127.0f * comp_sine_phase(t, s, 2) + 128.0f);
+		redValue = nice_colorval(comp_func_phase(lol_func, s, t, 20));
+		greenValue = nice_colorval(comp_func_phase(lol_func, s/2.0f, t/2.0f, 20));
+		blueValue = nice_colorval(comp_func_phase(lol_func, s/4.0f, t/4.0f, 20));
 
 		colorVals[0] = redValue;
 		colorVals[1] = greenValue;
@@ -151,7 +151,29 @@ void gen_png_sin(png_bytep *pixels, struct image_info *info) {
 	gen_png(pixels, info, pixgen_sin);
 }
 
-float comp_sine_phase(float t, float s, int levels) {
+
+png_byte nice_colorval(float v) {
+	return (png_byte) (127.0f * v) + 128.0f;
+}
+
+
+/********************************************************
+ * Crazy recursive shit                                 *
+ ********************************************************/
+float lol_func(float s, float t) {
+	return sin(s * s + t * t);
+}
+
+float comp_func_phase(float (*func) (float, float), float s, float t, int levels) {
+	if (levels == 0)
+		return 0.0f;
+	else
+		/* func(s + func(s + func(...), t + func(...)), t + func(s + func(...), t + func(...))) */
+		return func(s + comp_func_phase(func, s, t, levels - 1),
+			t + comp_func_phase(func, s, t, levels - 1));
+}
+
+float comp_sine_phase(float s, float t, int levels) {
 	if (levels == 0)
 		return 0.0f;
 	else
@@ -159,14 +181,14 @@ float comp_sine_phase(float t, float s, int levels) {
 		/* TODO make more interesting (multivariable stuff) */
 }
 
-float comp_sine_freq(float t, float s, int levels) {
+float comp_sine_freq(float s, float t, int levels) {
 	if (levels == 0)
 		return 1.0f;
 	else
 		return (float) sin(comp_sine_freq(s, t, levels - 1) * t);
 }
 
-float comp_sine_amp(float t, float s, int levels) {
+float comp_sine_amp(float s, float t, int levels) {
 	if (levels == 0)
 		return 1.0f;
 	else
