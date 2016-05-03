@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 	version();
 
 	/* name of prospective PNG */
-	char *filename = "lol.png";
+	char *filename = (char *) "lol.png";
 	enum palette color_palette = RGB_24;
 	int image_width = 500,
 		image_height = 500;
