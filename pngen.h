@@ -44,4 +44,19 @@ void pixgen_sin(struct pixel *pixel);
 /* Generates a PNG image w/ sinusoidally-calculated pixels */
 void gen_png_sin(png_bytep *pixels, struct image_info *info);
 
+/* Recursively composes sines together, so as to achieve
+ * strange phasing effect
+ */
+float comp_sine_phase(float t, float s, int levels);
+
+/* Recursively composes sines together, so as to achieve
+ * frequency modulating effect
+ */
+float comp_sine_freq(float t, float s, int levels);
+
+/* Recursively composes sines toether, so as to achieve
+ * amplitude modulating effect
+ */
+float comp_sine_amp(float t, float s, int levels);
+
 #endif

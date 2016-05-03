@@ -121,13 +121,9 @@ void pixgen_sin(struct pixel *pixel) {
 		 * (eventually may encapsulate this into generic function
 		 * pointer)
 		 */
-		redValue = (png_byte) (127.0f * sin(t + pow(s, t))  + 128.0f);
-		greenValue = (png_byte) (127.0f * sin(s + pow(t, s)) + 128.0f);
-		blueValue = (png_byte) (127.0f * sin(t/s) + 128.0f);
-
-			//redValue *= sin(greenValue);
-			//greenValue *= sin(blueValue);
-			//blueValue *= sin(redValue);
+		redValue = (png_byte) (127.0f * comp_sine_phase(t, s, 2) + 128.0f);
+		greenValue = (png_byte) (127.0f * comp_sine_freq(t, s, 2) + 128.0f);
+		blueValue = (png_byte) (127.0f * comp_sine_phase(t, s, 2) + 128.0f);
 
 		colorVals[0] = redValue;
 		colorVals[1] = greenValue;
@@ -153,4 +149,26 @@ void pixgen_sin(struct pixel *pixel) {
 
 void gen_png_sin(png_bytep *pixels, struct image_info *info) {
 	gen_png(pixels, info, pixgen_sin);
+}
+
+float comp_sine_phase(float t, float s, int levels) {
+	if (levels == 0)
+		return 0.0f;
+	else
+		return (float) sin(t + comp_sine_phase(s, t, levels - 1));
+		/* TODO make more interesting (multivariable stuff) */
+}
+
+float comp_sine_freq(float t, float s, int levels) {
+	if (levels == 0)
+		return 1.0f;
+	else
+		return (float) sin(comp_sine_freq(s, t, levels - 1) * t);
+}
+
+float comp_sine_amp(float t, float s, int levels) {
+	if (levels == 0)
+		return 1.0f;
+	else
+		return comp_sine_amp(s, t, levels - 1) * sin(t);
 }

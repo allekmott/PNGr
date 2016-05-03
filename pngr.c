@@ -16,7 +16,7 @@
 
 #include "pngen_cuda.h"
 
-#define PNGR_VERSION "0.2.1c"
+#define PNGR_VERSION "0.2.2c"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
