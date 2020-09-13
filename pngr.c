@@ -2,6 +2,7 @@
  * Created: 26 Dec 2015
  */
 
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -14,9 +15,7 @@
 #include "pngen.h"
 #include "pngr.h"
 
-#include "pngen_cuda.h"
-
-#define PNGR_VERSION "0.2.3"
+#define PNGR_VERSION "0.3.0"
 
 void version() {
 	printf("PNGr v%s\n", PNGR_VERSION);
@@ -100,9 +99,6 @@ int main(int argc, char *argv[]) {
 				} else if (optarg[0] == 's') {
 					printf("Using sinusoidal color algorithm\n");
 					png_gen = gen_png_sin;
-				} else if (optarg[0] == 'c') {
-					printf("Using sinusoidal color algorithm (CUDA)\n");
-					png_gen = cudagen_png_sin;
 				} else {
 					usage(argv[0]);
 				}
@@ -203,3 +199,4 @@ int main(int argc, char *argv[]) {
 	free(pixels);
 	return 0;
 }
+

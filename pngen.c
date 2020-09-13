@@ -7,6 +7,10 @@
 #include <time.h>
 #include <stdlib.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #include "pngen.h"
 
 void seed_rand() {
@@ -70,11 +74,11 @@ void pixgen_sin(struct pixel *pixel) {
 		/* normalize to fit exactly one cycle into image */
 
 		/* t is horizontal parameterization */
-		//static int min_t_raw = 0;
+		/* static int min_t_raw = 0; */
 		int max_t_raw = pixel->info->width;
 
 		/* s is vertical parameterization */
-		//static int min_s_raw = 0;
+		/* static int min_s_raw = 0; */
 		int max_s_raw = pixel->info->height;
 
 		/* Desired range of inputs:
@@ -137,7 +141,7 @@ void pixgen_sin(struct pixel *pixel) {
 		for (byten = 0; byten < (pixel->info->bpp); byten++)
 			pixel->data[byten] = colorVals[byten];
 	} else {
-		/* TODO define f(t, s) */
+		/* TODO: define f(t, s) */
 		int colorVal = 256 * sin(t) - 256 * sin(s);
 
 		int byten;
@@ -178,7 +182,7 @@ float comp_sine_phase(float s, float t, int levels) {
 		return 0.0f;
 	else
 		return (float) sin(t + comp_sine_phase(s, t, levels - 1));
-		/* TODO make more interesting (multivariable stuff) */
+		/* TODO: make more interesting (multivariable stuff) */
 }
 
 float comp_sine_freq(float s, float t, int levels) {
